@@ -28,7 +28,7 @@ function Navbar() {
         Scribe
       </a>
       <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-        <a href="/" style={{ color: 'var(--secondary)', fontSize: '0.9rem' }}>Research</a>
+        <a href="/research" style={{ color: 'var(--secondary)', fontSize: '0.9rem' }}>Research</a>
         <a href="/dashboard" style={{ color: 'var(--secondary)', fontSize: '0.9rem' }}>Dashboard</a>
       </div>
     </nav>
