@@ -185,8 +185,8 @@ const posts = await fetch(`${config.scribeApiUrl}/api/public/blog/posts`);
 
 ## License
 
-MIT
+Copyright (c) 2025 Mukit Momin. All Rights Reserved.
 
-## Contributing
+This is proprietary software. Unauthorized copying, distribution, modification, or use is strictly prohibited without express written permission.
 
-Contributions welcome! Please read the contributing guidelines first.
+For licensing inquiries, please contact: [your-email@example.com]
