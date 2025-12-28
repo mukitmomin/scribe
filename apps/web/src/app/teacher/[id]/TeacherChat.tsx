@@ -285,8 +285,8 @@ export function TeacherChat({ paperId, initialSessions, initialSessionId, initia
                             <p>Ask a question about the paper to get started.</p>
                         </div>
                     )}
-                    {messages.map(m => (
-                        <div key={m.id} className={`${styles.messageRow} ${m.role === 'user' ? styles.userRow : styles.teacherRow}`}>
+                    {messages.map((m, index) => (
+                        <div key={m.id || `message-${index}`} className={`${styles.messageRow} ${m.role === 'user' ? styles.userRow : styles.teacherRow}`}>
                             <div className={`${styles.messageBubble} ${m.role === 'user' ? styles.userBubble : styles.teacherBubble}`}>
                                 <div className={styles.roleLabel}>{m.role === 'assistant' ? 'Teacher' : 'You'}</div>
                                 <div className={styles.messageContent}>
