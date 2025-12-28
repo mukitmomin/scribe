@@ -1,0 +1,196 @@
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.modal {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    padding: 1.5rem;
+    border-radius: 12px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.2s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.title {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+.closeButton {
+    background: transparent;
+    border: none;
+    color: var(--secondary);
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s, background 0.2s;
+}
+
+.closeButton:hover {
+    color: var(--foreground);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.description {
+    color: var(--secondary);
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+}
+
+.cancelButton {
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    border: 1px solid var(--card-border);
+    background: transparent;
+    color: var(--foreground);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.cancelButton:hover {
+    border-color: var(--secondary);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.confirmButton {
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    border: none;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+
+.confirmButton:hover {
+    opacity: 0.9;
+}
+
+.confirmButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.dangerButton {
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    border: none;
+    background: #ef4444;
+    color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+
+.dangerButton:hover {
+    opacity: 0.9;
+}
+
+.formGroup {
+    margin-bottom: 1rem;
+}
+
+.formGroup:last-child {
+    margin-bottom: 0;
+}
+
+.label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--secondary);
+}
+
+.input {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 6px;
+    background: var(--background);
+    border: 1px solid var(--card-border);
+    color: var(--foreground);
+    font-size: 0.9rem;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 6px;
+    background: var(--background);
+    border: 1px solid var(--card-border);
+    color: var(--foreground);
+    font-family: 'Fira Code', 'Consolas', monospace;
+    font-size: 0.85rem;
+    resize: vertical;
+}
+
+.textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.hint {
+    font-size: 0.8rem;
+    color: var(--secondary);
+    margin-top: 0.5rem;
+    opacity: 0.8;
+}
