@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - BACKEND_URL=http://backend:8000
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./services/backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://scribe:scribe@db:5432/scribedb
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
+      - USE_MOCK_LLM=${USE_MOCK_LLM:-false}
+      - MULTI_TENANT_ENABLED=false
+      - CORS_ORIGINS=["http://localhost:3000","http://web:3000"]
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=scribe
+      - POSTGRES_PASSWORD=scribe
+      - POSTGRES_DB=scribedb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./services/backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U scribe -d scribedb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
