@@ -1,0 +1,87 @@
+meta {
+  name: Toggle Bookmark
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{baseUrl}}/api/v1/papers/:paper_id/bookmark
+  body: none
+  auth: inherit
+}
+
+params:path {
+  paper_id: 
+}
+
+example {
+  name: 200 Response
+  description: Successful Response
+  
+  request: {
+    url: {{baseUrl}}/api/v1/papers/:paper_id/bookmark
+    method: PUT
+    mode: none
+    params:path: {
+      paper_id: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+  
+      '''
+    }
+  }
+}
+
+example {
+  name: 422 Response
+  description: Validation Error
+  
+  request: {
+    url: {{baseUrl}}/api/v1/papers/:paper_id/bookmark
+    method: PUT
+    mode: none
+    params:path: {
+      paper_id: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 422
+      text: Unprocessable Entity
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "detail": [
+            {
+              "loc": [],
+              "msg": "",
+              "type": ""
+            }
+          ]
+        }
+      '''
+    }
+  }
+}

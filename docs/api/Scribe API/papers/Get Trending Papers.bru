@@ -1,0 +1,104 @@
+meta {
+  name: Get Trending Papers
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/v1/papers/trending
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~q: 
+  ~sort: 
+  ~topic: 
+}
+
+example {
+  name: 200 Response
+  description: Successful Response
+  
+  request: {
+    url: {{baseUrl}}/api/v1/papers/trending
+    method: GET
+    mode: none
+    params:query: {
+      ~q: 
+      ~sort: 
+      ~topic: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        [
+          {
+            "id": "",
+            "title": "",
+            "authors": [],
+            "summary": "",
+            "published_date": "",
+            "pdf_url": "",
+            "status": "",
+            "is_bookmarked": false
+          }
+        ]
+      '''
+    }
+  }
+}
+
+example {
+  name: 422 Response
+  description: Validation Error
+  
+  request: {
+    url: {{baseUrl}}/api/v1/papers/trending
+    method: GET
+    mode: none
+    params:query: {
+      ~q: 
+      ~sort: 
+      ~topic: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 422
+      text: Unprocessable Entity
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "detail": [
+            {
+              "loc": [],
+              "msg": "",
+              "type": ""
+            }
+          ]
+        }
+      '''
+    }
+  }
+}

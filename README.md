@@ -5,6 +5,7 @@ An AI-powered research assistant for discovering academic papers, learning throu
 ## Features
 
 - **Paper Discovery** - Search and browse arXiv papers with standard or agentic search
+- **Trend Discovery** - Find trending AI papers from HackerNews discussions
 - **AI Teacher** - Chat with an AI that explains papers in depth, with LaTeX math support
 - **Draft Generator** - Automatically generate blog post drafts from your chat sessions
 - **Publisher Dashboard** - Manage drafts, publish posts, and add Substack embeds
@@ -44,43 +45,64 @@ scribe/
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 20+
 - pnpm 9+
-- Python 3.11+
-- Docker & Docker Compose (optional)
+- Python 3.9+ (3.11+ recommended)
+- Docker & Docker Compose
 - Google API Key (for Gemini)
 
-### Quick Start with Docker
+### Quick Start (Recommended)
+
+The easiest way to start development is with the `dev.sh` script:
 
 ```bash
 # Clone the repository
 cd scribe
 
-# Copy environment file
+# Copy environment file and add your Google API key
 cp .env.example .env
+# Edit .env and add GOOGLE_API_KEY
 
-# Add your Google API key to .env
-# GOOGLE_API_KEY=your-key-here
-
-# Start all services
-docker-compose up
+# Start everything (database, backend, frontend)
+./dev.sh
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to use Scribe.
+This will:
+1. Set up Python virtual environment
+2. Install all dependencies
+3. Build shared packages
+4. Start PostgreSQL (Docker)
+5. Start backend (http://localhost:8000)
+6. Start frontend (http://localhost:3000)
 
-### Development Setup
+### Other Commands
 
 ```bash
-# Install dependencies
+./dev.sh stop      # Stop all services
+./dev.sh docker    # Start with Docker Compose (all services in containers)
+./dev.sh clean     # Remove venv, node_modules, logs
+```
+
+### Manual Development Setup
+
+If you prefer to run things manually:
+
+```bash
+# Install Node dependencies
 pnpm install
 
 # Build shared packages
 pnpm --filter @scribe/types build
 pnpm --filter @scribe/ui build
 
+# Start database
+docker compose up -d db
+
 # Start the backend
 cd services/backend
-pip install -e .
+python -m venv venv
+source venv/bin/activate
+pip install -e ".[dev]"
 uvicorn app.main:app --reload
 
 # Start the frontend (in another terminal)
@@ -88,17 +110,66 @@ cd apps/web
 pnpm dev
 ```
 
+## Testing
+
+### Running Integration Tests
+
+The API sanity check tests verify all endpoints are working:
+
+```bash
+# Ensure database is running
+docker compose up -d db
+
+# Run integration tests
+cd services/backend
+source venv/bin/activate
+pytest tests/integration/test_api_sanity.py -v
+```
+
+### Quick Sanity Check Script
+
+Run a quick check without pytest:
+
+```bash
+cd services/backend
+source venv/bin/activate
+python -c "from tests.integration.test_api_sanity import run_quick_sanity_check; run_quick_sanity_check()"
+```
+
+### Running All Tests
+
+```bash
+cd services/backend
+pytest tests/ -v
+```
+
+## API Documentation
+
+### Interactive Docs
+
+When the backend is running, access the interactive API documentation:
+
+- **Swagger UI**: http://localhost:8000/docs
+- **ReDoc**: http://localhost:8000/redoc
+- **OpenAPI JSON**: http://localhost:8000/openapi.json
+
+### Testing with Bruno
+
+1. Import from OpenAPI: Download `http://localhost:8000/openapi.json`
+2. In Bruno: Import Collection → OpenAPI/Swagger
+3. Set environment variable `baseUrl` to `http://localhost:8000`
+
 ## Environment Variables
 
-### Backend (`services/backend/.env`)
+### Root `.env`
 
 ```env
-# Database
+# Database (PostgreSQL via Docker)
 DATABASE_URL=postgresql+asyncpg://scribe:scribe@localhost:5432/scribedb
 
 # LLM
 GOOGLE_API_KEY=your-google-api-key
-USE_MOCK_LLM=false
+USE_MOCK_LLM=true  # Set to false for real LLM
 
 # Multi-tenancy (disabled by default)
 MULTI_TENANT_ENABLED=false
@@ -107,15 +178,18 @@ MULTI_TENANT_ENABLED=false
 CORS_ORIGINS=["http://localhost:3000"]
 ```
 
-### Frontend (`apps/web/.env`)
-
-```env
-BACKEND_URL=http://localhost:8000
-```
-
 ## API Reference
 
-### Versioned API (`/api/v1/`)
+### Trend Discovery (`/api/v1/trends/`)
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/v1/trends/discover` | GET | Discover trending papers from social signals |
+| `/api/v1/trends/hackernews` | GET | Get papers trending on HackerNews |
+
+Query parameters: `topic`, `time_window`, `max_results`
+
+### Papers (`/api/v1/papers/`)
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
@@ -123,9 +197,19 @@ BACKEND_URL=http://localhost:8000
 | `/api/v1/papers/bookmarks` | GET | List bookmarked papers |
 | `/api/v1/papers/{id}/bookmark` | PUT | Toggle bookmark |
 | `/api/v1/papers/discover` | GET | Agentic paper discovery |
+
+### Chat (`/api/v1/chat/`)
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
 | `/api/v1/chat/sessions/{paper_id}` | GET | List chat sessions |
 | `/api/v1/chat/session/{id}` | GET | Get session with messages |
 | `/api/v1/chat` | POST | Chat with teacher (SSE) |
+
+### Scribe (`/api/v1/scribe/`)
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
 | `/api/v1/scribe/draft` | POST | Generate blog draft |
 | `/api/v1/scribe/admin/posts` | GET | List all posts (admin) |
 | `/api/v1/scribe/post/{id}` | GET/PUT/DELETE | Manage posts |
@@ -145,7 +229,7 @@ Scribe is prepared for multi-tenant deployment:
 2. Middleware extracts tenant from request context
 3. Enable with `MULTI_TENANT_ENABLED=true`
 
-To enable multi-tenancy:
+To enable:
 1. Run the migration: `psql < migrations/001_add_tenant_id.sql`
 2. Configure authentication (Auth0/Clerk)
 3. Set `MULTI_TENANT_ENABLED=true`
@@ -158,10 +242,6 @@ To enable multi-tenancy:
 docker-compose up -d
 ```
 
-### Kubernetes
-
-Helm charts coming soon.
-
 ### Manual Deployment
 
 1. Deploy PostgreSQL
@@ -169,24 +249,8 @@ Helm charts coming soon.
 3. Deploy frontend to Vercel / Cloudflare Pages
 4. Configure environment variables
 
-## Integration with Portfolio
-
-Scribe exposes a public API that your portfolio can consume:
-
-```typescript
-// In your portfolio's config
-export const config = {
-    scribeApiUrl: process.env.SCRIBE_API_URL || 'https://scribe-api.example.com',
-};
-
-// Fetch published posts
-const posts = await fetch(`${config.scribeApiUrl}/api/public/blog/posts`);
-```
-
 ## License
 
 Copyright (c) 2025 Mukit Momin. All Rights Reserved.
 
 This is proprietary software. Unauthorized copying, distribution, modification, or use is strictly prohibited without express written permission.
-
-For licensing inquiries, please contact: [your-email@example.com]

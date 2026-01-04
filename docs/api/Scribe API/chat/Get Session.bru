@@ -1,0 +1,87 @@
+meta {
+  name: Get Session
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/v1/chat/session/:session_id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  session_id: 
+}
+
+example {
+  name: 200 Response
+  description: Successful Response
+  
+  request: {
+    url: {{baseUrl}}/api/v1/chat/session/:session_id
+    method: GET
+    mode: none
+    params:path: {
+      session_id: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+  
+      '''
+    }
+  }
+}
+
+example {
+  name: 422 Response
+  description: Validation Error
+  
+  request: {
+    url: {{baseUrl}}/api/v1/chat/session/:session_id
+    method: GET
+    mode: none
+    params:path: {
+      session_id: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 422
+      text: Unprocessable Entity
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "detail": [
+            {
+              "loc": [],
+              "msg": "",
+              "type": ""
+            }
+          ]
+        }
+      '''
+    }
+  }
+}
