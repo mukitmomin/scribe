@@ -47,10 +47,16 @@ ENV NODE_ENV=production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy built app
+# Copy standalone build - server.js is at the root of standalone output
+COPY --from=builder /app/apps/web/.next/standalone ./
+COPY --from=builder /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=builder /app/apps/web/public ./apps/web/public
-COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
+
+# Copy pnpm store to fix broken symlinks in standalone build
+COPY --from=builder /app/node_modules/.pnpm ./node_modules/.pnpm
+
+# Create symlink at root to satisfy pnpm's relative paths (../../../node_modules/.pnpm)
+RUN ln -s /app/node_modules /node_modules
 
 USER nextjs
 
@@ -58,4 +64,5 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "apps/web/server.js"]
+# The standalone server.js is at the root of the copied standalone folder
+CMD ["node", "server.js"]
