@@ -9,6 +9,8 @@ class Settings(BaseSettings):
     multi_tenant_enabled: bool = False
     default_tenant_id: str = "default"
     cors_origins: List[str] = ["http://localhost:3000"]
+    license_key: str = ""
+    backend_url: str = "http://localhost:8000"
 
     class Config:
         env_file = ".env"

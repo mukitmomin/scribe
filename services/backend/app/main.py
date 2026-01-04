@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routers.v1 import papers, chat, scribe
+from app.routers.v1 import papers, chat, scribe, trends
 from app.routers.public import blog
 
 app = FastAPI(
@@ -24,6 +24,7 @@ app.add_middleware(
 app.include_router(papers.router)
 app.include_router(chat.router)
 app.include_router(scribe.router)
+app.include_router(trends.router)
 
 # Public API for external consumption (e.g., portfolio blog)
 app.include_router(blog.router)
