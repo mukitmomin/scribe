@@ -27,7 +27,9 @@ on first run. `<skill-dir>` below means the directory containing this SKILL.md.
    Weigh: relevance to the themes (dominant), keyword matches, signal strength
    (hn_points, hn_comments, hf_upvotes, multiple matched_queries), and subtract
    sharply for avoid-list matches. Produce ONLY this JSON, nothing else:
-   `[{"id": "...", "score": N, "reason": "<=15 words"}]`
+   `[{"id": "...", "score": N, "reason": "<=15 words", "summary": "2-3 sentence analysis for score>=7, else null"}]`
+   The summary (score >= 7 only) must state: what the paper does, one concrete
+   finding or contribution, and why it's relevant to the user's themes.
 5. Write `$SCRIBE_HOME/digests/<YYYY-MM-DD>.md`: a markdown table sorted by
    score descending — columns: Score | Title | Reason | Link
    (link = `https://arxiv.org/abs/<id>`).
@@ -39,6 +41,7 @@ on first run. `<skill-dir>` below means the directory containing this SKILL.md.
    score: <score>
    sources: [<arxiv and/or hn, hf — whichever signals were nonzero>]
    status: inbox
+   summary: "<summary from step 4>"
    ---
    <abstract>
    ```
@@ -47,7 +50,10 @@ on first run. `<skill-dir>` below means the directory containing this SKILL.md.
    ALL ids fetched in step 3, not just the inboxed ones.
 8. Run `python3 <skill-dir>/scripts/sync.py --label scan` to commit and push
    the state dir when it is a git repo (no-op otherwise).
-9. Run `python3 <skill-dir>/scripts/notify.py` to post the top 5 to Slack
-   (no-op when `$SLACK_WEBHOOK_URL` is unset). This is the final script step.
-10. Reply with exactly: the top 5 as "score — title — reason" lines, then one
+9. Run `python3 <skill-dir>/scripts/notify.py --fetched <N> --inboxed <M>`
+   to post the top 5 to Slack (no-op when `$SLACK_WEBHOOK_URL` is unset).
+   This is the final script step.
+10. Run `python3 <skill-dir>/scripts/seed_memory.py` to initialise
+    `$SCRIBE_HOME/memory/themes.json` if it does not exist yet.
+11. Reply with exactly: the top 5 as "score — title — reason" lines, then one
     line of counts (fetched N, inboxed M, digest path). Nothing more.
