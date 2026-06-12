@@ -1,0 +1,14 @@
+{
+  "name": "scribe",
+  "owner": {
+    "name": "Mukit Momin",
+    "email": "mukit.bin.momin@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "scribe",
+      "source": "./",
+      "description": "Papers in, understanding out, in your terminal. /scribe:scan finds arXiv papers matching your interests, /scribe:learn teaches them, /scribe:review quizzes you with spaced repetition, /scribe:draft turns notes into blog drafts."
+    }
+  ]
+}

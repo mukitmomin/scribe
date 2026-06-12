@@ -1,0 +1,5 @@
+{
+  "name": "scribe",
+  "version": "2.0.0",
+  "description": "Papers in, understanding out, in your terminal. Scans arXiv/HN/HuggingFace for papers matching your interests, teaches them interactively, quizzes you with spaced repetition, and drafts blog posts from your notes."
+}

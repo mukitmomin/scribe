@@ -1,1 +1,0 @@
-# Scribe Backend Application

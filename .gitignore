@@ -1,109 +1,33 @@
-# Dependencies
-node_modules/
-.pnp
-.pnp.js
-
-# Python
+# Python (scripts are stdlib-only; this is just local run cache)
 __pycache__/
 *.py[cod]
 *$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-venv/
-env/
-ENV/
-.venv
 
-# Testing
-coverage/
-*.coverage
-.nyc_output
-.pytest_cache/
-htmlcov/
-
-# Next.js
-.next/
-out/
-.vercel
-
-# Production builds
-apps/*/build
-apps/*/dist
-apps/*/.next
-packages/*/dist
-packages/*/build
-
-# Environment variables
+# Environment / secrets
 .env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
 *.env
 
+# Claude Code local config + internal specs (not for the published plugin)
+.claude/
+
+# User state (Scribe writes to ~/.scribe, never the repo — guard against stray copies)
+.scribe/
+
 # Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 *.log
 
 # OS
 .DS_Store
-*.swp
-*.swo
-*~
-Thumbs.db
-
-# IDE
-.vscode/
-.idea/
-*.sublime-project
-*.sublime-workspace
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.tmproj
-.atom/
-.history
-
-# Docker
-.dockerignore
-
-# Database
-*.db
-*.sqlite
-*.sqlite3
-postgres_data/
-
-# Misc
-.turbo
-*.tsbuildinfo
-next-env.d.ts
-.cache
-temp/
-tmp/
-
-# macOS
 .AppleDouble
 .LSOverride
 ._*
+Thumbs.db
+
+# Editors / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.history
