@@ -5,8 +5,10 @@ description: Spaced-repetition quiz over previously learned paper notes that are
 
 # Reviewer
 
-State lives under `$SCRIBE_HOME` (default `~/.scribe/`). `<skill-dir>` means
-the directory containing this SKILL.md.
+State lives under the state dir, resolved in order: `$SCRIBE_HOME`, else
+`./data/` if it exists in the current directory (repo-local mode for remote /
+mobile sessions), else `~/.scribe/`. `<skill-dir>` means the directory
+containing this SKILL.md.
 
 ## Procedure
 

@@ -5,9 +5,10 @@ description: Scan arXiv, Hacker News, and Hugging Face for last week's papers ma
 
 # Scout
 
-State lives under `$SCRIBE_HOME` (default `~/.scribe/`). Scripts create it and
-seed `interests.md` on first run. `<skill-dir>` below means the directory
-containing this SKILL.md.
+State lives under the state dir, resolved in order: `$SCRIBE_HOME`, else
+`./data/` if it exists in the current directory (repo-local mode for remote /
+mobile sessions), else `~/.scribe/`. Scripts create it and seed `interests.md`
+on first run. `<skill-dir>` below means the directory containing this SKILL.md.
 
 ## Procedure
 
@@ -44,5 +45,9 @@ containing this SKILL.md.
 
 7. Run `python3 <skill-dir>/scripts/mark_seen.py --ids <id1> <id2> ...` with
    ALL ids fetched in step 3, not just the inboxed ones.
-8. Reply with exactly: the top 5 as "score — title — reason" lines, then one
-   line of counts (fetched N, inboxed M, digest path). Nothing more.
+8. Run `python3 <skill-dir>/scripts/sync.py --label scan` to commit and push
+   the state dir when it is a git repo (no-op otherwise).
+9. Run `python3 <skill-dir>/scripts/notify.py` to post the top 5 to Slack
+   (no-op when `$SLACK_WEBHOOK_URL` is unset). This is the final script step.
+10. Reply with exactly: the top 5 as "score — title — reason" lines, then one
+    line of counts (fetched N, inboxed M, digest path). Nothing more.

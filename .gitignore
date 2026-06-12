@@ -11,8 +11,9 @@ __pycache__/
 # Claude Code local config + internal specs (not for the published plugin)
 .claude/
 
-# User state (Scribe writes to ~/.scribe, never the repo — guard against stray copies)
+# User state (Scribe writes to ~/.scribe or a repo-local ./data; never this repo)
 .scribe/
+/data/
 
 # Logs
 *.log

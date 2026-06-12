@@ -70,8 +70,9 @@ Scribe splits the work cleanly:
 
 ## State (`~/.scribe/`)
 
-Set `$SCRIBE_HOME` to relocate it; defaults to `~/.scribe/`. Scripts create it
-on first run.
+The state dir is resolved in order: `$SCRIBE_HOME` if set, else `./data/` if it
+exists in the current directory (repo-local mode — see below), else `~/.scribe/`.
+Scripts create it on first run.
 
 ```
 ~/.scribe/
@@ -86,11 +87,37 @@ on first run.
 ## Headless / scheduled scans
 
 `/scribe:scan` runs fine without an interactive session, so you can have a fresh
-digest waiting each morning. A daily cron entry:
+digest waiting each morning. A daily cron entry (sourcing an env file that holds
+`SCRIBE_HOME` and, optionally, `SLACK_WEBHOOK_URL`):
 
 ```cron
-0 8 * * *  cd /path/to/scribe && claude -p "/scribe:scan"
+0 6 * * *  . $HOME/scribe.env && claude -p "/scribe:scan" >> $HOME/scan.log 2>&1
 ```
+
+For a one-off recurring run inside an interactive session you can use `/loop`,
+but that lasts only as long as the session — cron is the durable option.
+
+### Slack notifications
+
+Set `SLACK_WEBHOOK_URL` (a Slack [incoming webhook](https://api.slack.com/messaging/webhooks))
+and each scan posts its top 5 papers to that channel as plain ranked lines.
+Unset, scans run exactly as before — the notification step is a silent no-op.
+
+### Repo-local state & the mobile workflow
+
+If the current directory contains a `./data/` folder, Scribe stores state there
+instead of `~/.scribe/`. When that folder is a git repo, `/scribe:scan` and
+`/scribe:learn` commit and push their changes automatically. This enables a
+phone-first loop:
+
+1. A scheduled scan (e.g. on a homelab box) writes the digest into a private
+   `scribe-data` repo and pushes it, then pings Slack.
+2. You read the digest from Slack or the GitHub mobile app over coffee.
+3. From the **Claude mobile app**, open the repo and run `/scribe:learn <id>` —
+   it reads and writes `./data/`, then pushes your note back.
+
+So discovery is automated and learning happens from your phone, with the repo
+as the single source of truth.
 
 ## License
 

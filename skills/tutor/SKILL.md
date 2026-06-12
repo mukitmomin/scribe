@@ -5,8 +5,10 @@ description: Teach an arXiv paper interactively in the terminal, section by sect
 
 # Tutor
 
-State lives under `$SCRIBE_HOME` (default `~/.scribe/`). `<skill-dir>` means
-the directory containing this SKILL.md.
+State lives under the state dir, resolved in order: `$SCRIBE_HOME`, else
+`./data/` if it exists in the current directory (repo-local mode for remote /
+mobile sessions), else `~/.scribe/`. `<skill-dir>` means the directory
+containing this SKILL.md.
 
 ## Setup
 
@@ -53,5 +55,7 @@ interval_days: 3
 their words.
 ```
 
-Then delete `$SCRIBE_HOME/inbox/<id>.md` if it exists, and tell the user the
+Then delete `$SCRIBE_HOME/inbox/<id>.md` if it exists. Run
+`python3 <skill-dir>/scripts/sync.py --label learn` to commit and push the
+state dir when it is a git repo (no-op otherwise). Finally, tell the user the
 note path and review date.
